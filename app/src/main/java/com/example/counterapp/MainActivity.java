@@ -1,29 +1,54 @@
 package com.example.counterapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.EditText;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
+    private TextView txtTotal;
+    private Button btnIncrement;
 
-    int scoreTeamA = 0;
+    private int counter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        txtTotal = findViewById(R.id.txt_total);
+        btnIncrement = findViewById(R.id.btn_increment);
+
+        counter = 0;
+
+        btnIncrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counter++;
+                txtTotal.setText("" + counter);
+            }
+        });
+
     }
 
-    // + point for team A
-    public void addOneForTeamA(View v) {
-        scoreTeamA = scoreTeamA + 1;
-        displayForTeamA(scoreTeamA);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("key_counter", counter);
     }
 
-    //display Team A
-    public void displayForTeamA(int score) {
-        TextView scoreView = (TextView) findViewById(R.id.team_a_score);
-        scoreView.setText(String.valueOf(score));
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        counter = savedInstanceState.getInt("key_counter", 0);
+        txtTotal.setText("" + counter);
     }
 }
